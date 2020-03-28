@@ -25,7 +25,7 @@ jobs: # a collection of steps
       - run: 
           name: audit
           command: npm audit
-       - run:
-          name: testing build container
+      - run:
+          name: Build test container
           command: |
-            docker build -t "ucp:${CIRCLE_BUILD_NUM}" 
+            docker build -t "UCP:${CIRCLE_BUILD_NUM}" .
