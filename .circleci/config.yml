@@ -1,62 +1,41 @@
-version: 2
-jobs:
-  build-frontend:
-    docker:
-      - image: circleci/node:10.16.3
-    working_directory: ~/ucp
-    steps:
-      - run: echo build-frontend step
-  build-backend:
-    docker:
-      - image: circleci/node:10.16.3
-    working_directory: ~/ucp
-    steps:
-      - run: echo build-backend step
+version: 2.0 # use CircleCI 2.1
+jobs: # a collection of steps
+  build: # runs not using Workflows must have a `build` job as entry point
+    working_directory: ~/ucp # directory where steps will run
+    docker: # run the steps with Docker
+      - image: circleci/node:10.16.3 # ...with this image as the primary container; this is where all `steps` will run
+    steps: # a collection of executable commands
+      - checkout # special step to check out source code to working directory
+      - run:
+          name: update-npm
+          command: 'sudo npm install -g npm@latest'
+      - restore_cache: # special step to restore the dependency cache
+          # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+      - run:
+          name: Check npm and node version
+          command: |
+            node --version
+            npm --version
+      - run:
+          name: install-npm
+          command: npm install
+      - save_cache: # special step to save the dependency cache
+          key: dependency-cache-{{ checksum "package-lock.json" }}
+          paths:
+            - ./node_modules
+      - run: # run tests
+          name: test
+          command: npm test
+      - run: 
+          name: audit
+          command: npm audit
+      
+    
+      - setup_remote_docker:
+          version: 17.05.0-ce
 
-  test-frontend:
-    docker:
-      - image: circleci/node:10.16.3
-    working_directory: ~/ucp
-    steps:
-      - run: echo test-frontend step
-  test-backend:
-    docker:
-      - image: circleci/node:10.16.3
-    working_directory: ~/ucp
-    steps:
-      - run: echo test-backend step
-  integration-tests:
-    docker:
-      - image: circleci/node:10.16.3
-    working_directory: ~/ucp
-    steps:
-      - run: echo integration-tests step
-
-  deploy:
-    docker:
-      - image: circleci/node:10.16.3
-    working_directory: ~/ucp
-    steps:
-      - run: echo deploy step
-
-workflows:
-  version: 2
-  build-and-test:
-    jobs:
-      - build-frontend
-      - build-backend
-      - test-frontend:
-          requires:
-            - build-frontend
-      - test-backend:
-          requires:
-            - build-backend
-      - integration-tests:
-          requires:
-            - build-backend
-            - build-frontend
-      - deploy:
-          requires:
-            - test-frontend
-            - test-backend
-            - integration-tests
+      - run:
+          name: Build test container
+          command: |
+            docker build -t "ucp:${CIRCLE_BUILD_NUM}" .
