@@ -28,4 +28,4 @@ jobs: # a collection of steps
       - run:
           name: Build test container
           command: |
-            docker build -t "UCP:${CIRCLE_BUILD_NUM}" .
+            docker build -t "ucp:${CIRCLE_BUILD_NUM}" .
