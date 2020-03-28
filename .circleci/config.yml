@@ -13,6 +13,11 @@ jobs: # a collection of steps
           # Read about caching dependencies: https://circleci.com/docs/2.0/caching/
           key: dependency-cache-{{ checksum "package-lock.json" }}
       - run:
+          name: Check npm and node version
+          command: |
+            node --version
+            npm --version
+      - run:
           name: install-npm
           command: npm install
       - save_cache: # special step to save the dependency cache
@@ -25,6 +30,10 @@ jobs: # a collection of steps
       - run: 
           name: audit
           command: npm audit
+      
+      - setup_remote_docker:
+          version: 17.05.0-ce
+
       - run:
           name: Build test container
           command: |
