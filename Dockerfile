@@ -1,5 +1,7 @@
 FROM node:10.17.0
 
+LABEL MANTAINER="Jhon Edison Castro"
+
 EXPOSE 3000
 
 WORKDIR /app
