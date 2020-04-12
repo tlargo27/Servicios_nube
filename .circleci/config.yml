@@ -42,7 +42,7 @@ jobs: # a collection of steps
 
 workflows:
   version: 2
-  commit:
+  commit-workflow:
     jobs:
       - build
   nightly:
@@ -53,3 +53,5 @@ workflows:
             branches:
               only:
                 - master
+    jobs:
+      - build
