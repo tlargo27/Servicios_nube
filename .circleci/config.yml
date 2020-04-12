@@ -39,3 +39,17 @@ jobs: # a collection of steps
           name: Build test container
           command: |
             docker build -t "ucp:${CIRCLE_BUILD_NUM}" .
+
+workflows:
+  version: 2
+  commit:
+    jobs:
+      - build
+  nightly:
+    triggers:
+      - schedule:
+          cron: "0 0 0 1 * ? *"
+          filters:
+            branches:
+              only:
+                - master
