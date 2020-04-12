@@ -42,13 +42,13 @@ jobs: # a collection of steps
 
 workflows:
   version: 2
-  commit-workflow:
+  commit:
     jobs:
       - build
   nightly:
     triggers:
       - schedule:
-          cron: "0 0 0 1 * ? *"
+          cron: "0 1 0 1 * ? *"
           filters:
             branches:
               only:
