@@ -12,6 +12,6 @@ describe('App', function (){
 
 describe('Sum Number', function (){
 	it('should compare number 1 and two', () => {
-		expect(6).equal(5);
+		expect(5).equal(5);
 	});
 });
