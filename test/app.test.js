@@ -10,8 +10,8 @@ describe('App', function (){
 	});
 });
 
-describe('Sum Number', function (){
-	it('should compare number 1 and two', () => {
-		expect(5).equal(5);
+describe('Compare Number', function (){
+	it('should compare number 1 and 2', () => {
+		expect(4).equal(5);
 	});
 });
